@@ -9,8 +9,10 @@ import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 const composer = new Composer<Ctx>();
 
 const HELP =
-  "ℹ️ Tap /start to open the menu, then pick what you want from the buttons.\n\n" +
-  "Everything in this bot is reachable by tapping — you don't need to remember any commands.";
+  "Send me an image and I'll remove the watermark for you.\n\n" +
+  "Tap /start to open the menu, then choose Upload media to get started.\n" +
+  "Supported formats: PNG, JPEG, MP4, WebM.\n" +
+  "Files are processed in memory and never stored.";
 
 const backToMenu = inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]);
 
