@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Upload media",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Initiate the watermark removal workflow by uploading an image or video"
+            }
+          }
+        ],
+        "send": {
+          "callback": "upload:media"
+        }
+      }
+    ]
+  }
+]
