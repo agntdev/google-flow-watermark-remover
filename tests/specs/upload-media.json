@@ -1,19 +1,160 @@
 [
   {
-    "name": "Upload media",
+    "name": "Upload media button shows instructions",
     "steps": [
       {
+        "send": { "callback": "upload:media" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send me an image or video and I'll remove the watermark.\n\nSupported formats: PNG, JPEG, MP4, WebM.\nFiles are processed in memory and not stored."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Photo upload triggers processing then error when download fails",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 1,
+            "message": {
+              "message_id": 1,
+              "date": 0,
+              "chat": { "id": 1, "type": "private", "first_name": "Test" },
+              "from": { "id": 1, "is_bot": false, "first_name": "Test" },
+              "photo": [
+                {
+                  "file_id": "AgACAgIAAxkBAAI",
+                  "file_unique_id": "AQAD",
+                  "width": 90,
+                  "height": 90,
+                  "file_size": 1000
+                },
+                {
+                  "file_id": "AgACAgIAAxkBAAIB",
+                  "file_unique_id": "AQAE",
+                  "width": 800,
+                  "height": 600,
+                  "file_size": 50000
+                }
+              ]
+            }
+          }
+        },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Processing your image…" }
+          },
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Something went wrong while processing your file. Try again in a moment." }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Video upload shows not available message",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 1,
+            "message": {
+              "message_id": 1,
+              "date": 0,
+              "chat": { "id": 1, "type": "private", "first_name": "Test" },
+              "from": { "id": 1, "is_bot": false, "first_name": "Test" },
+              "video": {
+                "file_id": "BAACAgIAAxkBAAI",
+                "file_unique_id": "AQAD",
+                "width": 1280,
+                "height": 720,
+                "duration": 10,
+                "file_size": 500000,
+                "mime_type": "video/mp4"
+              }
+            }
+          }
+        },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Initiate the watermark removal workflow by uploading an image or video"
+              "text": "Video processing is not available right now — send me an image (PNG or JPEG) and I'll remove the watermark."
             }
           }
-        ],
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Unsupported document format shows error",
+    "steps": [
+      {
         "send": {
-          "callback": "upload:media"
-        }
+          "update": {
+            "update_id": 1,
+            "message": {
+              "message_id": 1,
+              "date": 0,
+              "chat": { "id": 1, "type": "private", "first_name": "Test" },
+              "from": { "id": 1, "is_bot": false, "first_name": "Test" },
+              "document": {
+                "file_id": "CAACAgIAAxkBAAI",
+                "file_unique_id": "AQAD",
+                "file_name": "report.pdf",
+                "mime_type": "application/pdf",
+                "file_size": 10000
+              }
+            }
+          }
+        },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Unsupported format. Send me a PNG, JPEG, MP4, or WebM file."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Non-media document with no extension shows error",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 1,
+            "message": {
+              "message_id": 1,
+              "date": 0,
+              "chat": { "id": 1, "type": "private", "first_name": "Test" },
+              "from": { "id": 1, "is_bot": false, "first_name": "Test" },
+              "document": {
+                "file_id": "DAACAgIAAxkBAAI",
+                "file_unique_id": "AQAD",
+                "file_size": 500
+              }
+            }
+          }
+        },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Unsupported format. Send me a PNG, JPEG, MP4, or WebM file."
+            }
+          }
+        ]
       }
     ]
   }
